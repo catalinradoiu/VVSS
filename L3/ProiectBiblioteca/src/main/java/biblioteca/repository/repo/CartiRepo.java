@@ -67,6 +67,16 @@ public class CartiRepo implements CartiRepoInterface {
 		
 	}
 
+	public void golesteFisier(){
+		try {
+			PrintWriter writer = new PrintWriter(file);
+			writer.print("");
+			writer.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public List<Carte> cautaCarte(String ref) {
 		List<Carte> carti = getCarti();
