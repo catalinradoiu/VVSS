@@ -6,15 +6,24 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class BibliotecaCtrlTest {
 
     private BibliotecaCtrl bibliotecaCtrl;
+    private CartiRepo cartiRepo;
 
     @Before
     public void setUp() throws Exception {
-        bibliotecaCtrl = new BibliotecaCtrl(new CartiRepo());
+        cartiRepo = new CartiRepo();
+        bibliotecaCtrl = new BibliotecaCtrl(cartiRepo);
+    }
+
+    @After
+    public void tearDown() throws Exception{
+        cartiRepo.golesteFisier();
     }
 
     @Test
@@ -209,5 +218,58 @@ public class BibliotecaCtrlTest {
         } catch (Exception e){
             assert false;
         }
+    }
+
+
+    @Test
+    public void getCartiOrdonateDinAnulBBTValid(){
+        try{
+            adaugaCarti();
+            List<Carte> result = bibliotecaCtrl.getCartiOrdonateDinAnul("2010");
+            System.out.println(result.size());
+            assert result.size() == 3;
+            assert result.get(0).getTitlu().equals("Titlu testa");
+            assert result.get(1).getTitlu().equals("Titlu testb");
+            assert result.get(2).getTitlu().equals("Titlu testc");
+        } catch (Exception e){
+            assert false;
+        }
+    }
+
+    @Test
+    public void getCartiOrdinateDinAnulWBTInvalid(){
+        try{
+            bibliotecaCtrl.getCartiOrdonateDinAnul("das2");
+            assert false;
+        } catch (Exception e){
+            assert true;
+        }
+    }
+
+    private void adaugaCarti() throws Exception {
+        Carte carte = new Carte();
+        carte.setTitlu("Titlu testa");
+        carte.adaugaReferent("Popescu");
+        carte.setAnAparitie("2010");
+        carte.setEditura("test");
+        carte.adaugaCuvantCheie("cuvant");
+        carte.adaugaCuvantCheie("cuv");
+        bibliotecaCtrl.adaugaCarte(carte);
+        carte = new Carte();
+        carte.setTitlu("Titlu testb");
+        carte.adaugaReferent("Ionescu");
+        carte.setAnAparitie("2010");
+        carte.setEditura("test");
+        carte.adaugaCuvantCheie("cuvant");
+        carte.adaugaCuvantCheie("cuv");
+        bibliotecaCtrl.adaugaCarte(carte);
+        carte = new Carte();
+        carte.setTitlu("Titlu testc");
+        carte.adaugaReferent("Gigi");
+        carte.setAnAparitie("2010");
+        carte.setEditura("test");
+        carte.adaugaCuvantCheie("cuvant");
+        carte.adaugaCuvantCheie("cuv");
+        bibliotecaCtrl.adaugaCarte(carte);
     }
 }
